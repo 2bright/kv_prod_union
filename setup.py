@@ -8,7 +8,7 @@ setuptools.setup(
     version="0.1.0",
     author="Wen Jie Liang",
     author_email="l.wen.jie@qq.com",
-    description="managing parameter samples",
+    description="parameter sampling config",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/2bright/kv_prod_union",
