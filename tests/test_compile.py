@@ -1,10 +1,3 @@
-# Introduction
-  This package defines a config format for parameter sampling based on python datatype (i.e. dict, list, tuple).
-  Using this config format, you can manage parameter dependencies easily when sampling parameters.
-
-# Examples
-
-```
 import pytest
 import kv_prod_union as kv
 
@@ -106,4 +99,3 @@ def test_compile_6():
   ]
   samples = kv.compile(sampling_config)
   assert samples == samples_expected
-```
