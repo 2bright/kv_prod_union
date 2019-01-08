@@ -50,7 +50,7 @@ def prod_union(sampling_config):
           elif len(k_tuple) == 1:
             samples = union(samples, [{k_tuple[0]:v_tuple[0]}])
         else:
-          raise ValueError('value tuple should has the same length as key tuple.')
+          raise ValueError('value tuple should has the same length as key tuple, or has an additional dict as depend sampling_config.')
   return samples
 
 def compile(sampling_config):
