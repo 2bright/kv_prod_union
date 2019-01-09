@@ -46,7 +46,7 @@ def compile(sampling_config):
           raise ValueError('value tuple format error.')
   return samples
 
-def param_sample_to_string(sample, key_alias = {}, include_key = True):
+def to_string(sample, key_alias = {}, include_key = True):
   sample_in_str = ''
   for k in sorted(sample.keys()):
     v = sample[k]
