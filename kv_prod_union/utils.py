@@ -13,37 +13,47 @@ def union(samples_1, samples_2):
   return samples_1 + samples_2
 
 def compile(sampling_config):
-  if not isinstance(sampling_config, dict):
-    raise TypeError('sampling_config must be type of dict')
   samples = []
+  if not isinstance(sampling_config, list):
+    sampling_config = [sampling_config]
   if len(sampling_config) > 1:
-    for k_tuple, v_list in sampling_config.items():
-      samples = prod(samples, compile({k_tuple: v_list}))
+    for one_sampling_config in sampling_config:
+      samples = union(samples, compile(one_sampling_config))
   elif len(sampling_config) == 1:
-    for k_tuple, v_list in sampling_config.items():
-      if not isinstance(k_tuple, tuple):
-        k_tuple = (k_tuple,)
-      if not isinstance(v_list, list):
-        v_list = [v_list]
-      if len(v_list) > 1:
-        for v_tuple in v_list:
-          samples = union(samples, compile({k_tuple:v_tuple}))
-      elif len(v_list) == 1:
-        v_tuple = v_list[0]
-        if not isinstance(v_tuple, tuple):
-          v_tuple = (v_tuple,)
-        if len(v_tuple) == 2 and isinstance(v_tuple[-1], dict):
-          sub_sampling_config = v_tuple[-1]
-          v_tuple = v_tuple[0]
-          samples = union(samples, prod(compile({k_tuple:v_tuple}), compile(sub_sampling_config)))
-        elif len(v_tuple) == len(k_tuple):
-          if len(k_tuple) > 1:
-            for i in range(len(k_tuple)):
-              samples = prod(samples, compile({k_tuple[i]:v_tuple[i]}))
-          elif len(k_tuple) == 1:
-            samples = union(samples, [{k_tuple[0]:v_tuple[0]}])
-        else:
-          raise ValueError('value tuple format error.')
+    one_sampling_config = sampling_config[0]
+    if isinstance(one_sampling_config, list):
+      samples = compile(one_sampling_config)
+    elif isinstance(one_sampling_config, dict):
+      if len(one_sampling_config) > 1:
+        for k_tuple, v_list in one_sampling_config.items():
+          samples = prod(samples, compile({k_tuple: v_list}))
+      elif len(one_sampling_config) == 1:
+        for k_tuple, v_list in one_sampling_config.items():
+          if not isinstance(k_tuple, tuple):
+            k_tuple = (k_tuple,)
+          if not isinstance(v_list, list):
+            v_list = [v_list]
+          if len(v_list) > 1:
+            for v_tuple in v_list:
+              samples = union(samples, compile({k_tuple:v_tuple}))
+          elif len(v_list) == 1:
+            v_tuple = v_list[0]
+            if not isinstance(v_tuple, tuple):
+              v_tuple = (v_tuple,)
+            if len(v_tuple) == 3 and v_tuple[1] == '::':
+              sub_sampling_config = v_tuple[2]
+              v_tuple = v_tuple[0]
+              samples = union(samples, prod(compile({k_tuple:v_tuple}), compile(sub_sampling_config)))
+            elif len(v_tuple) == len(k_tuple):
+              if len(k_tuple) > 1:
+                for i in range(len(k_tuple)):
+                  samples = prod(samples, compile({k_tuple[i]:v_tuple[i]}))
+              elif len(k_tuple) == 1:
+                samples = union(samples, [{k_tuple[0]:v_tuple[0]}])
+            else:
+              raise ValueError('value tuple format error.')
+    else:
+      raise ValueError('format error.')
   return samples
 
 def to_string(sample, key_alias = {}, include_key = True):
