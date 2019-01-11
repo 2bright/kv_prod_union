@@ -68,3 +68,16 @@ def to_string(sample, key_alias = {}, include_key = True):
     else:
       sample_in_str += str(v) + '--'
   return sample_in_str[:-2]
+
+def from_string(sample_in_str, key_alias = {}, value_types = {}):
+  key_alias_r = {v: k for k, v in key_alias.items()}
+  sample = {}
+  kv_list = sample_in_str.split('--')
+  for kv in kv_list:
+    k,v = (e for e in kv.split('-'))
+    if key_alias_r.get(k) is not None:
+      k = key_alias_r.get(k)
+    if value_types.get(k) is not None:
+      v = value_types.get(k)(v)
+    sample[k] = v
+  return sample

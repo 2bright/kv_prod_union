@@ -21,6 +21,20 @@ def test_key_alias_None():
   str_result = kv.to_string(sample, None)
   assert str_result == str_expected
 
+  sample_expected = {
+    'key1': 'True',
+    'key2': '1',
+    'key3': '0.2',
+  }
+  assert sample_expected == kv.from_string(str_result)
+
+  value_types = {
+    'key1': bool,
+    'key2': int,
+    'key3': float,
+  }
+  assert sample == kv.from_string(str_result, value_types = value_types)
+
 def test_key_alias():
   sample = {
     'key1': True,
@@ -35,3 +49,17 @@ def test_key_alias():
   }
   str_result = kv.to_string(sample, key_alias)
   assert str_result == str_expected
+
+  sample_expected = {
+    'key1': 'True',
+    'key2': '1',
+    'key3': '0.2',
+  }
+  assert sample_expected == kv.from_string(str_result, key_alias)
+
+  value_types = {
+    'key1': bool,
+    'key2': int,
+    'key3': float,
+  }
+  assert sample == kv.from_string(str_result, key_alias, value_types)
