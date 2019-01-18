@@ -143,10 +143,15 @@ def test_compile_escape_value_4():
   sampling_config = [
     {('k1','k2','k3','k4'): (((1,2),),({'v2':3},),{'v3':4},'::')},
     {('k1','k2','k3'): (((1,2),),('::',),{'v3':4})},
+    ({'k1':[5,6]}, [{'k2':7}, {'k3':8}]),
   ]
   samples_expected = [
     {'k1': (1,2), 'k2':{'v2':3}, 'k3':{'v3':4},'k4':'::'},
     {'k1': (1,2), 'k2':'::', 'k3':{'v3':4}},
+    {'k1': 5, 'k2': 7},
+    {'k1': 5, 'k3': 8},
+    {'k1': 6, 'k2': 7},
+    {'k1': 6, 'k3': 8},
   ]
   samples = kv.compile(sampling_config)
   assert samples == samples_expected

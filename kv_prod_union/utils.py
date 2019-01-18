@@ -23,6 +23,9 @@ def compile(sampling_config):
     one_sampling_config = sampling_config[0]
     if isinstance(one_sampling_config, list):
       samples = compile(one_sampling_config)
+    elif isinstance(one_sampling_config, tuple):
+      for sub_one_sampling_config in one_sampling_config:
+        samples = prod(samples, compile(sub_one_sampling_config))
     elif isinstance(one_sampling_config, dict):
       if len(one_sampling_config) > 1:
         for k_tuple, v_list in one_sampling_config.items():
